@@ -5,4 +5,5 @@ numpy
 pystempel
 sklearn
 str
-pyclustering
+pandas
+scipy

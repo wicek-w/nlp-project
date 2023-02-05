@@ -1,22 +1,16 @@
 import streamlit as st
+import numpy as np
 import pandas as pd
 from nltk.metrics.distance import edit_distance
-import advertools as adv
-from nltk import word_tokenize
+from sklearn.cluster import KMeans
 import nltk
-from nltk.tokenize.treebank import TreebankWordDetokenizer
-import pyclustering as PC
+import functions as f
+from sklearn.cluster import AffinityPropagation
 
 # settings
 nltk.download('punkt')
-
-def cleaning_data(keywords, lan = 'polish'):
-    # we assume that user write clean keywords w\ interpunction
-    stopwords = (list(adv.stopwords[lan]))
-    words = word_tokenize(keywords)
-    words = [word for word in words if word not in stopwords]
-    words = TreebankWordDetokenizer().detokenize(words)
-    return words
+corpus_sentences_list =[]
+cluster_name_list = []
 
 header = st.container()
 dataset = st.container()
@@ -37,27 +31,37 @@ with dataset:
     nr_clusters = st.number_input(label='How many clusters?', min_value=2, key=2)
 
 with model:
-    keywords = cleaning_data(kw_input)
+    if st.button('Zaczynajmy!'):
+        keywords = f.cleaning_data(kw_input, lan)
 
-    # Edit distance - vector
-    dist = [edit_distance(keywords[i], keywords[j])
-            for i in range(1, len(keywords))
-            for j in range(0,i)]
+        distance = f.similarity(keywords)
 
-    labels, error, nfound = PC.kmedoids(dist, nclusters=nr_clusters)
+        clusterer = KMeans(n_clusters=nr_clusters)
+        clusterer.fit(distance)
+        cluster_assignment = clusterer.labels_
 
-    st.write("How many errors? {}" .format(len(error)))
-    st.write("How many outliers? {}" .format(len(nfound)))
+        clustered_sentences = [[] for i in range(nr_clusters)]
+        for sentence_id, cluster_id in enumerate(cluster_assignment):
+            clustered_sentences[cluster_id].append(keywords[sentence_id])
 
-    st.write("You want to see the groups?")
-    cluster = dict()
+        for nr, cluster in enumerate(clustered_sentences):
+            for kw in cluster[:]:
+                cluster_name_list.append("Grupa {}, #{} Elementów ".format(nr + 1, len(cluster)))
+                corpus_sentences_list.append(kw)
 
-with results:
-    # printing the results
-    for word, label in zip(keywords, labels):
-        cluster.setdefault(label, []).append(word)
-    for label, grp in cluster.items():
-        str.write(grp)
+        results = pd.DataFrame(sorted(zip(cluster_name_list,cluster_name_list, corpus_sentences_list)), columns=["cluster_id", "cluster_name", "keyword"])
+
+        results["length"] = results["keyword"].astype(str).map(len)
+        results = results .sort_values(by="length", ascending=True)
+
+        results['cluster_name'] = results.groupby('cluster_name')['keyword'].transform('first')
+        results.sort_values(['cluster_name', "keyword"], ascending=[True, True], inplace=True)
+
+        results['cluster_name'] = results['cluster_name'].fillna("ups! nie przypisano do żadnego klastra")
+
+        del results['length']
+        st.table(results)
+
 
 
 
