@@ -23,7 +23,7 @@ with header:
 with dataset:
     # input a keywords
     st.header("Please write your keywords")
-    kw_input = pd.DataFrame(st.text_area("IMPORTANT! Each keyword should be in new line").split('\n'))
+    kw_input = pd.DataFrame(st.text_area("Each keyword should be in new line").split('\n'))
     kw_input = kw_input[0].tolist()
     st.write(kw_input)
     # language settings to choose stopwords list

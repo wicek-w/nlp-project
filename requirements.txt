@@ -7,3 +7,4 @@ sklearn
 str
 pandas
 scipy
+scikit-learn
