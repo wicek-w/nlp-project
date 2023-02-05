@@ -11,6 +11,7 @@ import Pycluster as PC
 nltk.download('punkt')
 
 def cleaning_data(keywords, lan = 'polish'):
+    # we assume that user write clean keywords w\ interpunction
     stopwords = (list(adv.stopwords[lan]))
     words = word_tokenize(keywords)
     words = [word for word in words if word not in stopwords]
@@ -31,6 +32,7 @@ with dataset:
     kw_input = pd.DataFrame(st.text_area("IMPORTANT! Each keyword should be in new line").split('\n'))
     kw_input = kw_input[0].tolist()
     st.write(kw_input)
+    # language settings to choose stopwords list
     lan = st.selectbox("Choose the language", options=["polish", "english", "spanish"], index=0)
     nr_clusters = st.number_input(label='How many clusters?', min_value=2, key=2)
 
@@ -49,8 +51,9 @@ with model:
 
     st.write("You want to see the groups?")
     cluster = dict()
-    
+
 with results:
+    # printing the results
     for word, label in zip(keywords, labels):
         cluster.setdefault(label, []).append(word)
     for label, grp in cluster.items():
