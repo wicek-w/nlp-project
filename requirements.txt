@@ -6,4 +6,3 @@ pystempel
 sklearn
 str
 pyclustering
-Pycluster

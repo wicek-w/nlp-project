@@ -5,7 +5,7 @@ import advertools as adv
 from nltk import word_tokenize
 import nltk
 from nltk.tokenize.treebank import TreebankWordDetokenizer
-import Pycluster as PC
+import pyclustering as PC
 
 # settings
 nltk.download('punkt')
