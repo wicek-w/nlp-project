@@ -1,0 +1,9 @@
+streamlit==1.17.0
+nltk
+advertools
+numpy
+pystempel
+sklearn
+str
+pyclustering
+Pycluster
