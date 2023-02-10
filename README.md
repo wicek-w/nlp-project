@@ -9,6 +9,6 @@ It is divided for 3 parts:
 - **model** - cleaning phrases from stopwords, creating matrix with distance metric and cluster keywords using Kmeans method.
 - **results** - writing group of keywords. The name of clustster is chosen by looking for the shortest keyword in the group.
 
-You can test the application under URL: https://nlp-project.streamlit.app/ or by running `streamlit run streamit_app.py`.
+You can test the application under URL: https://nlp-project.streamlit.app/ or by running `streamlit run streamlit_app.py`.
 
 
