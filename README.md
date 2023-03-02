@@ -1,4 +1,4 @@
-# CLustering keywords - K-means and Edit distance
+# Clustering keywords - K-means and Edit distance
 
 Project that clusters keywords based on Leventshtein algorithm and K-means method.
 
